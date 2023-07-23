@@ -3,7 +3,7 @@ server:
 logging:
   level:
     com:
-      baizhi: debug
+      example: debug
 mybatis:
   mapper-locations: classpath:com/example/mapper/*.xml
   type-aliases-package: com.example.entity
