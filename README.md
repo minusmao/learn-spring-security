@@ -12,3 +12,4 @@
 | spring-security-04split            | 3.1.8 完整示例-前后端分离         |
 | spring-security-05web-verifycode   | 3.1.9 添加认证验证码-前后端不分离     |
 | spring-security-06split-verifycode | 3.1.9 添加认证验证码-前后端分离      |
+| spring-security-07password         | 5 密码加密                   |
