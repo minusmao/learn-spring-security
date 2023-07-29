@@ -14,3 +14,4 @@
 | spring-security-06split-verifycode | 3.1.9 添加认证验证码-前后端分离      |
 | spring-security-07password         | 5 密码加密                   |
 | spring-security-08rememberMe       | 6 RememberMe             |
+| spring-security-09rememberMe-web   | 6.5.2 传统 web 开发记住我实现     |
