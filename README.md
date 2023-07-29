@@ -17,3 +17,4 @@
 | spring-security-09rememberMe-web     | 6.5.2 传统 web 开发记住我实现     |
 | spring-security-10rememberMe-split   | 6.5.3 前后端分离开发记住我实现       |
 | spring-security-11session-management | 7 会话管理                   |
+| spring-security-12csrf-attack        | 8.2.2 创建恶意应用             |

