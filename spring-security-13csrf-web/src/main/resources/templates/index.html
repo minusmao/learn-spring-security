@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>测试开启 CSRF</title>
+</head>
+<body>
+
+<h1>主页</h1>
+<form method="post" th:action="@{/hello}">
+  信息: <input name="name" type="text"> <br>
+  <input type="submit" value="提交">
+</form>
+</body>
+</html>

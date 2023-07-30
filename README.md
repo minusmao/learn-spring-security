@@ -20,3 +20,4 @@
 | spring-security-12csrf-attack        | 8.2.2 创建恶意应用             |
 | spring-security-12csrf-blank         | 8.3.2 开启 CSRF 防御         |
 | spring-security-13csrf-split         | 8.5 前后端分离使用 CSRF         |
+| spring-security-13csrf-web           | 8.4 传统 web 开发使用 CSRF     |
