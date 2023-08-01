@@ -23,3 +23,4 @@
 | spring-security-13csrf-web           | 8.4 传统 web 开发使用 CSRF       |
 | spring-security-14cors               | 9.4 Spring Security 跨域解决方案 |
 | spring-security-15exception-handle   | 10.2 自定义异常处理配置             |
+| spring-security-16authorize          | 11 授权                      |
