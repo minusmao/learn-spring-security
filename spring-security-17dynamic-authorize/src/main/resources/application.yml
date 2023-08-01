@@ -1,0 +1,16 @@
+server:
+  port: 8080
+logging:
+  level:
+    com:
+      example: debug
+mybatis:
+  mapper-locations: classpath:com/example/mapper/*.xml
+  type-aliases-package: com.example.entity
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/learn_spring_security?allowPublicKeyRetrieval=true&useSSL=false
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
