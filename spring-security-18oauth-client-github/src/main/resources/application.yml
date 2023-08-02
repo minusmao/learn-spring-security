@@ -1,0 +1,12 @@
+server:
+  port: 8080
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${GITHUB_OAUTH2_CLIENT_ID}
+            client-secret: ${GITHUB_OAUTH2_CLIENT_SECRET}
+            # 一定要与重定向回调 URL 一致
+            redirect-uri: http://localhost:8080/login/oauth2/code/github
