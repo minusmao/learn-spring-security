@@ -27,3 +27,4 @@
 | spring-security-17dynamic-authorize    | 11.7 实战（数据库动态管理权限规则）       |
 | spring-security-18oauth-client-github  | 12.5 GitHub 授权登录           |
 | spring-security-19authorization-server | 12.7.1 授权服务器搭建             |
+| spring-security-20resource-server      | 12.7.1.3 资源服务器搭建           |
