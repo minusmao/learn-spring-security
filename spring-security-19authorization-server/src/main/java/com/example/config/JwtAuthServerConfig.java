@@ -1,10 +1,10 @@
 package com.example.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -12,67 +12,55 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import javax.sql.DataSource;
-import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableAuthorizationServer
-@ConditionalOnMissingBean(JwtAuthServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
-public class JdbcAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
-
-    private final DataSource dataSource;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
+public class JwtAuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
-    public JdbcAuthorizationServerConfig(DataSource dataSource, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
-        this.dataSource = dataSource;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-    }
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private DataSource dataSource;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-    @Bean
+    @Bean // 声明 ClientDetails 实现
     public ClientDetailsService clientDetails() {
         JdbcClientDetailsService jdbcClientDetailsService = new JdbcClientDetailsService(dataSource);
         jdbcClientDetailsService.setPasswordEncoder(passwordEncoder);
         return jdbcClientDetailsService;
     }
 
-    @Override
+    @Override//使用数据库方式客户端存储
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        // 配置管理 Client 客户端信息的 Service
         clients.withClientDetails(clientDetails());
     }
 
-    //配置令牌存储
-    @Bean
+    @Bean//使用 JWT 方式生成令牌
     public TokenStore tokenStore() {
-        return new JdbcTokenStore(dataSource);
+        return new JwtTokenStore(jwtAccessTokenConverter());
     }
 
-    @Override
+    @Bean//使用同一个密钥来编码 JWT 中的  OAuth2 令牌
+    public JwtAccessTokenConverter jwtAccessTokenConverter() {
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setSigningKey("123");//可以采用属性注入方式 生产中建议加密
+        return converter;
+    }
+
+    @Override //配置使用 jwt 方式颁发令牌,同时配置 jwt 转换器
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        endpoints.authenticationManager(authenticationManager);//认证管理器
-        endpoints.tokenStore(tokenStore());//配置令牌存储为数据库存储
-
-        // 配置TokenServices参数
-        DefaultTokenServices tokenServices = new DefaultTokenServices();//修改默认令牌生成服务
-        tokenServices.setTokenStore(endpoints.getTokenStore());//基于数据库令牌生成
-        tokenServices.setSupportRefreshToken(true);//是否支持刷新令牌
-        tokenServices.setReuseRefreshToken(true);//是否重复使用刷新令牌（直到过期）
-
-        tokenServices.setClientDetailsService(endpoints.getClientDetailsService());//设置客户端信息
-        tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());//用来控制令牌存储增强策略
-        //访问令牌的默认有效期（以秒为单位）。过期的令牌为零或负数。
-        tokenServices.setAccessTokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30)); // 30天
-        //刷新令牌的有效性（以秒为单位）。如果小于或等于零，则令牌将不会过期
-        tokenServices.setRefreshTokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(3)); //3天
-
-        endpoints.tokenServices(tokenServices);//使用配置令牌服务
+        endpoints.tokenStore(tokenStore())//配置令牌存储为数据库存储
+                .accessTokenConverter(jwtAccessTokenConverter())
+                .authenticationManager(authenticationManager)//认证管理器
+                .userDetailsService(userDetailsService);// 不添加则 refresh token 的时候会报错
     }
 
     //授权码这种模式:

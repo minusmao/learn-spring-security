@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 //自定义 授权服务器配置
 @Configuration
 @EnableAuthorizationServer //指定当前应用为授权服务器
-@ConditionalOnMissingBean(JdbcAuthorizationServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效，测试 jdbc 方案存储 Client 客户端信息
+@ConditionalOnMissingBean(JwtAuthServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
 public class InMemoryAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
