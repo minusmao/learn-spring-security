@@ -1,5 +1,6 @@
 package com.example.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -11,6 +12,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
 @EnableResourceServer
+@ConditionalOnMissingBean(RedisResourceServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
 public class JwtResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override

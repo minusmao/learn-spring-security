@@ -1,27 +1,26 @@
 package com.example.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
-import javax.sql.DataSource;
-
-//开启 oauth 资源服务器
 @Configuration
 @EnableResourceServer
-@ConditionalOnMissingBean(RedisResourceServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
-public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
-    private final DataSource dataSource;
+public class RedisResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Autowired
-    public ResourceServerConfig(DataSource dataSource) {
-        this.dataSource = dataSource;
+    private RedisConnectionFactory redisConnectionFactory;
+
+    @Bean// 存储 token 的方式
+    public TokenStore tokenStore() {
+        return new RedisTokenStore(redisConnectionFactory);
     }
 
     @Override
@@ -29,9 +28,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         resources.tokenStore(tokenStore());
     }
 
-    @Bean
-    public TokenStore tokenStore() {
-        return new JdbcTokenStore(dataSource);
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/admin/**").hasRole("admin")
+                .anyRequest().authenticated();
     }
 
 }
