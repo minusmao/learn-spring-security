@@ -10,11 +10,24 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 
+/**
+ * 授权服务器<br>
+ * 客户端 id 和 secret 配置在内存中（直接代码写死，见 46 行）<br>
+ * 貌似生成的 token 令牌也是存在内存中的（这里代码没配置InMemoryTokenStore()，应该是默认）<br>
+ * 可以参考：<a href="https://mp.weixin.qq.com/s/GXMQI59U6uzmS-C0WQ5iUw">OAuth2 登录流程</a><br>
+ * <br>
+ * 因为是基于内存，所以资源服务器只能每次向授权服务器的/oauth/check_token接口发起请求，才能解析令牌<br>
+ * 对应的资源服务器配置类是 {@link com.example.config.RemoteResourceServerConfig}<br>
+ *
+ * @author minus
+ * @since 2023-09-08 00:50
+ */
 //自定义 授权服务器配置
 @Configuration
 @EnableAuthorizationServer //指定当前应用为授权服务器
-@ConditionalOnMissingBean(RedisAuthorizationServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
+//@ConditionalOnMissingBean(RedisAuthorizationServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
 public class InMemoryAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
@@ -44,6 +57,16 @@ public class InMemoryAuthorizationServerConfig extends AuthorizationServerConfig
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.userDetailsService(userDetailsService); //注入 userDetailService
         endpoints.authenticationManager(authenticationManager); //注入 authenticationManager
+    }
+
+    /**
+     * 配置令牌端点的安全约束，也就是/oauth/check_token这个端点谁能访问，谁不能访问
+     * @param security a fluent configurer for security features
+     */
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) {
+        security.checkTokenAccess("permitAll()")  // checkTokenAccess 是指一个 token 校验的端点，这个端点我们设置为可以直接访问
+                .allowFormAuthenticationForClients();
     }
 
     //授权码这种模式:

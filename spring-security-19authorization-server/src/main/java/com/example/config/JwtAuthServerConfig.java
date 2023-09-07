@@ -19,9 +19,20 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import javax.sql.DataSource;
 
+/**
+ * 授权服务器<br>
+ * 客户端 id 和 secret 配置在数据库中（见 55 行）<br>
+ * 生成的 token 令牌为 jwt，其自身已经包含用户信息，授权服务器不会保存该令牌<br>
+ * 可以参考：<a href="https://mp.weixin.qq.com/s/xEIWTduDqQuGL7lfiP735w">想让 OAuth2 和 JWT 在一起愉快玩耍</a>
+ * <br>
+ * 对应的资源服务器配置类是 {@link com.example.config.JwtResourceServerConfig}<br>
+ *
+ * @author minus
+ * @since 2023-09-08 00:50
+ */
 @Configuration
 @EnableAuthorizationServer
-@ConditionalOnMissingBean(RedisAuthorizationServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
+@ConditionalOnMissingBean(InMemoryAuthorizationServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
 public class JwtAuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired

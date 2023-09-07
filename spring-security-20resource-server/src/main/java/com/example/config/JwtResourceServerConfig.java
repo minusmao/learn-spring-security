@@ -10,9 +10,16 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+/**
+ * 资源服务器<br>
+ * 对应的授权服务器配置类是 {@link com.example.config.JwtAuthServerConfig}<br>
+ *
+ * @author minus
+ * @since 2023-09-08 00:50
+ */
 @Configuration
 @EnableResourceServer
-@ConditionalOnMissingBean(RedisResourceServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
+@ConditionalOnMissingBean(RemoteResourceServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
 public class JwtResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override

@@ -12,10 +12,17 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 import javax.sql.DataSource;
 
+/**
+ * 资源服务器<br>
+ * 对应的授权服务器配置类是 {@link com.example.config.JdbcAuthorizationServerConfig}<br>
+ *
+ * @author minus
+ * @since 2023-09-08 00:50
+ */
 //开启 oauth 资源服务器
 @Configuration
 @EnableResourceServer
-@ConditionalOnMissingBean(RedisResourceServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
+@ConditionalOnMissingBean(RemoteResourceServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     private final DataSource dataSource;
 

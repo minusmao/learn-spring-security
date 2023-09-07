@@ -1,6 +1,7 @@
 package com.example.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -20,8 +21,20 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
 
 import javax.sql.DataSource;
 
+/**
+ * 授权服务器<br>
+ * 客户端 id 和 secret 配置在数据库中（见 89 行）<br>
+ * 生成的 token 令牌也是存在 redis 中的（见 65、100 行）<br>
+ * 可以参考：<a href="https://mp.weixin.qq.com/s/cGopy8hDPtkn8Q7HUYabbA">OAuth2 令牌还能存入 Redis</a>
+ * <p>
+ * 对应的资源服务器配置类是 {@link com.example.config.RedisResourceServerConfig}<br>
+ *
+ * @author minus
+ * @since 2023-09-08 00:50
+ */
 @Configuration
 @EnableAuthorizationServer
+@ConditionalOnMissingBean(InMemoryAuthorizationServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
 public class RedisAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
@@ -58,7 +71,7 @@ public class RedisAuthorizationServerConfig extends AuthorizationServerConfigure
     }
 
     /**
-     * 配置令牌端点的安全约束，也就是这个端点谁能访问，谁不能访问
+     * 配置令牌端点的安全约束，也就是/oauth/check_token这个端点谁能访问，谁不能访问
      * @param security a fluent configurer for security features
      */
     @Override

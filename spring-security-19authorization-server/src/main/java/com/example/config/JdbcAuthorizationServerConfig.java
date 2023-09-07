@@ -19,9 +19,18 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import javax.sql.DataSource;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 授权服务器<br>
+ * 客户端 id 和 secret 配置在数据库中（见 54 行）<br>
+ * 生成的 token 令牌也是存在数据库中的（见 62、72 行）<br>
+ * 对应的资源服务器配置类是 {@link com.example.config.ResourceServerConfig}<br>
+ *
+ * @author minus
+ * @since 2023-09-08 00:50
+ */
 @Configuration
 @EnableAuthorizationServer
-@ConditionalOnMissingBean(RedisAuthorizationServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
+@ConditionalOnMissingBean(InMemoryAuthorizationServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
 public class JdbcAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private final DataSource dataSource;
