@@ -48,7 +48,9 @@ public class InMemoryAuthorizationServerConfig extends AuthorizationServerConfig
                 .withClient("client")// 客户端 id
                 .secret(passwordEncoder.encode("secret"))//注册客户端秘钥（必须是加密后的密文）
                 .redirectUris("http://www.baidu.com")
-                .authorizedGrantTypes("authorization_code", "refresh_token", "implicit", "password", "client_credentials") //授权服务器支持的模式 仅支持授权码模式
+                // 授权服务器支持的模式（authorization_code 授权码模式、implicit 简化模式、password 密码模式、client_credentials 客户端模式）
+                // 其中 refresh_token 不算做模式，功能是支持刷新令牌
+                .authorizedGrantTypes("authorization_code", "refresh_token", "implicit", "password", "client_credentials")
                 .scopes("read:user");//令牌允许获取的资源权限
     }
 
