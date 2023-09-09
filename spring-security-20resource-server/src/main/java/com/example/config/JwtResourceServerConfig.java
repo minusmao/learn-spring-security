@@ -19,7 +19,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
  */
 @Configuration
 @EnableResourceServer
-@ConditionalOnMissingBean(RemoteResourceServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
+//@ConditionalOnMissingBean(RemoteResourceServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
 public class JwtResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override

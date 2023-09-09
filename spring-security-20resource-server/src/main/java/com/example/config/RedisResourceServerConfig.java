@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
  */
 @Configuration
 @EnableResourceServer
-@ConditionalOnMissingBean(RemoteResourceServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
+@ConditionalOnMissingBean(JwtResourceServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
 public class RedisResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Autowired

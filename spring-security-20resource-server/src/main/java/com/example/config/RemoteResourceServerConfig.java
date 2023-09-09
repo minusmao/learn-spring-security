@@ -1,5 +1,6 @@
 package com.example.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +18,7 @@ import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
  */
 @Configuration
 @EnableResourceServer
+@ConditionalOnMissingBean(JwtResourceServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
 public class RemoteResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Bean

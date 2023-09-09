@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Configuration
 @EnableAuthorizationServer
-@ConditionalOnMissingBean(InMemoryAuthorizationServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
+@ConditionalOnMissingBean(JwtAuthServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
 public class JdbcAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private final DataSource dataSource;

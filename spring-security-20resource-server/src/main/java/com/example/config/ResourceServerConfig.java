@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 //开启 oauth 资源服务器
 @Configuration
 @EnableResourceServer
-@ConditionalOnMissingBean(RemoteResourceServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
+@ConditionalOnMissingBean(JwtResourceServerConfig.class)    // 个人补充：此注解是为了使当前配置类失效
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     private final DataSource dataSource;
 
